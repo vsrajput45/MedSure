@@ -137,6 +137,12 @@ Click **Deploy** — your application will compile and be live on Vercel!
 
 ---
 
+## 👥 Contributors
+- **Vivek Singh Rajput** ([@vsrajput45](https://github.com/vsrajput45)) — *Lead Creator & Maintainer*
+- **Himanshu** ([@himanshuskb18-alt](https://github.com/himanshuskb18-alt)) — *Contributor*
+
+---
+
 ## 🛡️ Patient-First Mission
 - Built with patient empowerment and radical cost transparency at its core.
 - Transparent, verifiable, and open for healthcare billing clarity.
