@@ -1,4 +1,4 @@
-import { Shield, HeartHandshake, CheckCircle2, FileText, Database, Stethoscope, Sparkles } from 'lucide-react';
+import { Shield, HeartHandshake, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Footer() {

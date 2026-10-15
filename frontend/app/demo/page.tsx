@@ -5,15 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { 
   Sparkles, 
-  CheckCircle2, 
   ArrowRight, 
-  Stethoscope, 
-  FileSearch, 
   Scale, 
-  Download, 
-  FileEdit, 
-  Play, 
-  ShieldCheck, 
   Calculator, 
   Copy, 
   Layers,
@@ -23,7 +16,6 @@ import { api } from '@/lib/api';
 
 export default function DemoPage() {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
   const steps = [
@@ -52,7 +44,7 @@ export default function DemoPage() {
         setLoading(true);
         try {
           const bills = await api.getBills();
-          const demoBill = bills.find((b: any) => b.is_demo_sample) || bills[0];
+          const demoBill = bills.find((b) => b.is_demo_sample) || bills[0];
           if (demoBill) {
             router.push(`/bills/${demoBill.id}/review`);
           }
@@ -71,7 +63,7 @@ export default function DemoPage() {
         setLoading(true);
         try {
           const bills = await api.getBills();
-          const demoBill = bills.find((b: any) => b.is_demo_sample) || bills[0];
+          const demoBill = bills.find((b) => b.is_demo_sample) || bills[0];
           if (demoBill) {
             const audit = await api.runAudit(demoBill.id);
             router.push(`/audits/${audit.id}`);

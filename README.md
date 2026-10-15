@@ -115,6 +115,29 @@ pytest backend/tests -v
 
 ---
 
+## 🌐 Deploy to Vercel
+
+Deploying the **MEDSURE** Next.js frontend to Vercel is seamless:
+
+### 1. Import Project on Vercel
+1. Log in to [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New..."** ➔ **"Project"**.
+2. Select your `MedSure` GitHub repository.
+
+### 2. Configure Monorepo Settings *(Important)*
+Because MedSure contains both `frontend/` (Next.js) and `backend/` (FastAPI):
+- **Root Directory:** Click **Edit** and set to `frontend`.
+- **Framework Preset:** Select **Next.js** (Turbopack supported).
+
+### 3. Environment Variables
+Under the **Environment Variables** section in Vercel, add:
+- `NEXT_PUBLIC_API_URL` : `https://<your-hosted-backend-url>/api/v1`
+- *(Optional)* `BACKEND_URL` : `https://<your-hosted-backend-url>` (enables Next.js server-side proxy rewrites for `/api/v1/*` to bypass CORS and Mixed Content).
+
+Click **Deploy** — your application will compile and be live on Vercel!
+
+---
+
 ## 🛡️ Patient-First Mission
 - Built with patient empowerment and radical cost transparency at its core.
 - Transparent, verifiable, and open for healthcare billing clarity.
+

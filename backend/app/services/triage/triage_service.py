@@ -23,75 +23,387 @@ class TriageService:
     # Clinical Specialty Knowledge Base
     SPECIALTY_PATTERNS = {
         "Orthopedics": [
-            r"\b(knee|joint|bone|hip|spine|fracture|ligament|acl|arthritis|osteoarthritis|cartilage|ortho)\b",
-            r"(घुटने|जोड़|हड्डी|कमर दर्द|गठिया|हड्डी टूटना)"
+            r"\b(knee|joint|bone|hip|spine|fracture|ligament|acl|arthritis|osteoarthritis|cartilage|ortho|shoulder|dislocation|back pain)\b",
+            r"(घुटने|जोड़|हड्डी|कमर दर्द|गठिया|हड्डी टूटना|फ्रैक्चर|कूल्हा|प्लास्टर)"
         ],
         "Cardiology": [
-            r"\b(heart|cardiac|palpitation|chest pressure|angina|pulse|arrhythmia|ecg)\b",
-            r"(दिल|धड़कन|दिल की धड़कन|कार्डियक)"
+            r"\b(heart|cardiac|palpitation|chest pressure|angina|pulse|arrhythmia|ecg|bypass|cabg|stent|angioplasty|heart attack)\b",
+            r"(दिल|धड़कन|दिल की धड़कन|कार्डियक|बायपास|हार्ट अटैक|स्टेंट)"
         ],
         "Gastroenterology": [
-            r"\b(abdomen|stomach|gastric|gallbladder|appendix|appendicitis|cholecystitis|hernia|jaundice|liver|bowel|colon)\b",
-            r"(पेट|पेट दर्द|अपेंडिक्स|पित्त की थैली|पीलिया|उल्टी|गैस)"
+            r"\b(abdomen|stomach|gastric|gallbladder|appendix|appendicitis|cholecystitis|hernia|jaundice|liver|bowel|colon|piles|fissure|fistula|acidity|ulcer)\b",
+            r"(पेट|पेट दर्द|अपेंडिक्स|पित्त की थैली|पीलिया|उल्टी|गैस|बवासीर|पाइल्स|हर्निया)"
+        ],
+        "Urology & Nephrology": [
+            r"\b(kidney|renal|stone|lithotripsy|urinary|urine|prostate|turp|dialysis|creatinine|bladder)\b",
+            r"(गुर्दा|किडनी|पथरी|पेशाब|प्रोस्टेट|डायलिसिस)"
         ],
         "Ophthalmology": [
-            r"\b(eye|vision|cataract|cornea|glaucoma|retina|blur|ophthal|lens)\b",
-            r"(आँख|आंख|धुंधला|मोतियाबिंद|दृष्टि)"
+            r"\b(eye|vision|cataract|cornea|glaucoma|retina|blur|ophthal|lens|lasik|spectacles)\b",
+            r"(आँख|आंख|धुंधला|मोतियाबिंद|दृष्टि|चश्मा)"
         ],
         "Obstetrics & Gynecology": [
-            r"\b(pregnancy|delivery|caesarean|c-section|labor|uterus|ovary|gynec)\b",
-            r"(गर्भावस्था|प्रसव|डिलीवरी|सिजेरियन)"
+            r"\b(pregnancy|delivery|caesarean|c-section|labor|uterus|ovary|gynec|hysterectomy|period|pcod|pcos)\b",
+            r"(गर्भावस्था|प्रसव|डिलीवरी|सिजेरियन|बच्चेदानी|मासिक धर्म)"
         ],
         "Pulmonology": [
-            r"\b(lung|cough|asthma|bronchitis|wheezing|respiratory|pneumonia)\b",
-            r"(फेफड़े|खांसी|दमा|अस्थमा|कफ)"
+            r"\b(lung|cough|asthma|bronchitis|wheezing|respiratory|pneumonia|tuberculosis|tb|breath)\b",
+            r"(फेफड़े|खांसी|दमा|अस्थमा|कफ|निमोनिया|टीबी)"
+        ],
+        "Neurology": [
+            r"\b(brain|neuro|nerve|headache|migraine|stroke|paralysis|seizure|epilepsy|vertigo)\b",
+            r"(दिमाग|सिरदर्द|माइग्रेन|लकवा|दौरा|चक्कर|मस्तिष्क)"
+        ],
+        "ENT": [
+            r"\b(ear|nose|throat|tonsil|sinus|sinusitis|hearing|dns|septoplasty|ear pain)\b",
+            r"(कान|नाक|गला|टॉन्सिल|साइनस)"
+        ],
+        "Internal Medicine & Infectious Diseases": [
+            r"\b(fever|dengue|malaria|typhoid|infection|viral|platelet|chills|weakness|flu|covid)\b",
+            r"(बुखार|वायरल|डेंगू|मलेरिया|टाइफाइड|संक्रमण|कमजोरी)"
         ],
         "General Surgery": [
-            r"\b(surgery|wound|cyst|abscess|swelling|lump|incision)\b",
-            r"(सर्जरी|ऑपरेशन|गांठ|सूजन)"
+            r"\b(surgery|wound|cyst|abscess|swelling|lump|incision|operation)\b",
+            r"(सर्जरी|ऑपरेशन|गांठ|सूजन|घाव)"
         ]
     }
 
     # Common Procedure Mapping
     PROCEDURE_PATTERNS = [
+        # 1. Total Knee Replacement
         {
             "code": "PROC-KNEE-TKR-01",
             "name": "Total Knee Replacement (Unilateral)",
             "specialty": "Orthopedics",
             "keywords": [
                 "knee replacement", "knee osteoarthritis", "severe knee pain", "tkr", "knee surgery",
-                "घुटने का प्रत्यारोपण", "घुटने का दर्द", "घुटने में दर्द", "घुटने में बहुत तेज दर्द", "घुटने"
+                "ghutne ka operation", "ghutne me dard", "ghutne ka dard",
+                "घुटने का प्रत्यारोपण", "घुटने का दर्द", "घुटने में दर्द", "घुटने में बहुत तेज दर्द", "घुटने का ऑपरेशन"
             ]
         },
+        # 2. Total Hip Replacement
+        {
+            "code": "PROC-ORTHO-THR-01",
+            "name": "Total Hip Replacement (THR)",
+            "specialty": "Orthopedics",
+            "keywords": [
+                "hip replacement", "hip arthroplasty", "thr", "hip fracture surgery", "hip pain severe",
+                "koolhe ka operation", "hip operation",
+                "कूल्हे का प्रत्यारोपण", "हिप रिप्लेसमेंट", "कूल्हे की हड्डी"
+            ]
+        },
+        # 3. Bone Fracture Treatment & Plaster/Fixation
+        {
+            "code": "PROC-ORTHO-FRAC-01",
+            "name": "Bone Fracture Reduction & Internal Fixation",
+            "specialty": "Orthopedics",
+            "keywords": [
+                "fracture", "broken bone", "bone fracture", "hairline fracture", "plaster", "cast", "bone surgery",
+                "haddi toot", "haddi crack",
+                "हड्डी टूटना", "फ्रैक्चर", "हड्डी टूट गई", "प्लास्टर", "हड्डी क्रैक"
+            ]
+        },
+        # 4. ACL / Ligament Reconstruction
+        {
+            "code": "PROC-ORTHO-ACL-01",
+            "name": "Arthroscopic ACL / Knee Ligament Reconstruction",
+            "specialty": "Orthopedics",
+            "keywords": [
+                "acl", "ligament", "arthroscopy", "knee ligament tear", "meniscus tear",
+                "लिगामेंट", "आर्थोस्कोपी", "लिगामेंट टियर"
+            ]
+        },
+        # 5. Spine Surgery / Slip Disc Discectomy
+        {
+            "code": "PROC-ORTHO-SPINE-01",
+            "name": "Lumbar Discectomy / Spine Decompression Surgery",
+            "specialty": "Orthopedics",
+            "keywords": [
+                "slip disc", "spine surgery", "sciatica", "disc bulge", "lumbar spine", "back surgery",
+                "स्लिप डिस्क", "रीढ़ की हड्डी का ऑपरेशन", "साइटिका"
+            ]
+        },
+        # 6. Laparoscopic Appendectomy
         {
             "code": "PROC-GI-APP-01",
             "name": "Laparoscopic Appendectomy",
             "specialty": "Gastroenterology",
-            "keywords": ["appendicitis", "appendix pain", "appendix", "lower right abdominal pain", "अपेंडिक्स", "पेट के निचले हिस्से में दर्द"]
+            "keywords": [
+                "appendicitis", "appendix pain", "appendix", "lower right abdominal pain", "appendix ka dard", "appendix operation",
+                "अपेंडिक्स", "पेट के निचले हिस्से में दर्द", "अपेंडिक्स का ऑपरेशन"
+            ]
         },
+        # 7. Laparoscopic Cholecystectomy
         {
             "code": "PROC-GI-CHO-01",
             "name": "Laparoscopic Cholecystectomy (Gallbladder Removal)",
             "specialty": "Gastroenterology",
-            "keywords": ["gallbladder stone", "gallstone", "cholecystectomy", "cholelithiasis", "पित्त की पथरी", "पित्ताशय"]
+            "keywords": [
+                "gallbladder stone", "gallstone", "cholecystectomy", "cholelithiasis", "gallbladder pain",
+                "pitt ki thaili me pathri", "pitt ki thaili", "gallbladder pathri",
+                "पित्त की पथरी", "पित्ताशय", "पित्त की थैली में पथरी"
+            ]
         },
+        # 8. Hernia Repair Surgery
+        {
+            "code": "PROC-SURG-HERNIA-01",
+            "name": "Inguinal / Umbilical Hernia Repair Surgery",
+            "specialty": "General Surgery",
+            "keywords": [
+                "hernia", "inguinal hernia", "umbilical hernia", "herniotomy", "hernioplasty",
+                "हर्निया", "हर्निया का ऑपरेशन"
+            ]
+        },
+        # 9. Piles / Hemorrhoids Surgery
+        {
+            "code": "PROC-SURG-PILES-01",
+            "name": "Laser Hemorrhoidectomy (Piles / Fissure Surgery)",
+            "specialty": "General Surgery",
+            "keywords": [
+                "piles", "hemorrhoids", "fissure", "fistula", "bleeding during stool",
+                "बवासीर", "पाइल्स", "भगंदर", "फिशर"
+            ]
+        },
+        # 10. Upper GI Endoscopy
+        {
+            "code": "PROC-GI-ENDO-01",
+            "name": "Diagnostic Upper GI Endoscopy & Colonoscopy",
+            "specialty": "Gastroenterology",
+            "keywords": [
+                "endoscopy", "colonoscopy", "gastroscopy", "stomach endoscopy",
+                "एंडोस्कोपी", "कोलोनोस्कोपी"
+            ]
+        },
+        # 11. Kidney Stone Removal (Lithotripsy/PCNL)
+        {
+            "code": "PROC-URO-STONE-01",
+            "name": "Kidney Stone Laser Removal (PCNL / URSL / Lithotripsy)",
+            "specialty": "Urology & Nephrology",
+            "keywords": [
+                "kidney stone", "renal stone", "renal calculus", "lithotripsy", "pcnl", "ursl", "ureteric stone",
+                "gurde ki pathri", "gurde me pathri", "kidney pathri", "pathri",
+                "गुर्दे की पथरी", "किडनी स्टोन", "पथरी का ऑपरेशन", "किडनी में पथरी", "पथरी"
+            ]
+        },
+        # 12. TURP Prostate Surgery
+        {
+            "code": "PROC-URO-TURP-01",
+            "name": "Transurethral Resection of Prostate (TURP)",
+            "specialty": "Urology & Nephrology",
+            "keywords": [
+                "prostate surgery", "turp", "enlarged prostate", "bph", "difficulty passing urine",
+                "प्रोस्टेट", "पौरुष ग्रंथि", "पेशाब में रुकावट"
+            ]
+        },
+        # 13. Hemodialysis Package
+        {
+            "code": "PROC-NEPH-DIAL-01",
+            "name": "Hemodialysis Session & Care Package",
+            "specialty": "Urology & Nephrology",
+            "keywords": [
+                "dialysis", "hemodialysis", "kidney failure", "renal failure", "high creatinine",
+                "डायलिसिस", "किडनी फेलियर", "गुर्दा खराब"
+            ]
+        },
+        # 14. Cataract Surgery with Foldable IOL
         {
             "code": "PROC-OPH-CAT-01",
             "name": "Cataract Surgery with Foldable IOL (Phacoemulsification)",
             "specialty": "Ophthalmology",
-            "keywords": ["cataract", "cloudy lens", "phaco", "eye lens", "मोतियाबिंद", "आंख का लेंस"]
+            "keywords": [
+                "cataract", "cloudy lens", "phaco", "eye lens", "cataract surgery",
+                "मोतियाबिंद", "आंख का लेंस", "मोतियाबिंद का ऑपरेशन"
+            ]
         },
+        # 15. LASIK Eye Surgery
+        {
+            "code": "PROC-OPH-LASIK-01",
+            "name": "Customized Contoura LASIK Laser Eye Surgery",
+            "specialty": "Ophthalmology",
+            "keywords": [
+                "lasik", "laser eye surgery", "specs removal", "laser vision",
+                "लेसिक", "चश्मा हटाने का ऑपरेशन", "आंखों का लेजर"
+            ]
+        },
+        # 16. Caesarean Section Delivery
         {
             "code": "PROC-OBG-CS-01",
             "name": "Caesarean Section Delivery (C-Section)",
             "specialty": "Obstetrics & Gynecology",
-            "keywords": ["c-section", "caesarean", "cesarean", "planned delivery", "सिजेरियन डिलीवरी"]
+            "keywords": [
+                "c-section", "caesarean", "cesarean", "planned c-section", "surgical delivery",
+                "सिजेरियन", "सिजेरियन डिलीवरी", "ऑपरेशन से डिलीवरी"
+            ]
         },
+        # 17. Normal Vaginal Delivery
+        {
+            "code": "PROC-OBG-NVD-01",
+            "name": "Normal Vaginal Delivery Care Package",
+            "specialty": "Obstetrics & Gynecology",
+            "keywords": [
+                "normal delivery", "natural childbirth", "vaginal delivery", "maternity delivery",
+                "सामान्य प्रसव", "नॉर्मल डिलीवरी", "डिलीवरी"
+            ]
+        },
+        # 18. Hysterectomy (Uterus Removal)
+        {
+            "code": "PROC-OBG-HYST-01",
+            "name": "Total Laparoscopic / Abdominal Hysterectomy (Uterus Removal)",
+            "specialty": "Obstetrics & Gynecology",
+            "keywords": [
+                "hysterectomy", "uterus removal", "fibroid uterus", "uterine prolapse",
+                "बच्चेदानी का ऑपरेशन", "हिस्टेरेक्टॉमी", "बच्चेदानी निकालना"
+            ]
+        },
+        # 19. Coronary Angiography
         {
             "code": "PROC-CARD-ANGIO-01",
             "name": "Coronary Angiography",
             "specialty": "Cardiology",
-            "keywords": ["angiography", "coronary angiogram", "heart block check", "एंजियोग्राफी"]
+            "keywords": [
+                "angiography", "coronary angiogram", "heart block check", "cag",
+                "एंजियोग्राफी", "दिल की नसों की जांच"
+            ]
+        },
+        # 20. Coronary Angioplasty with Stent (PTCA)
+        {
+            "code": "PROC-CARD-PTCA-01",
+            "name": "Coronary Angioplasty with Drug-Eluting Stent (PTCA)",
+            "specialty": "Cardiology",
+            "keywords": [
+                "angioplasty", "stent", "drug eluting stent", "ptca", "heart blockage treatment", "coronary stent",
+                "एंजियोप्लास्टी", "स्टेंट", "हार्ट स्टेंट", "छल्ला डालना", "नसों में ब्लॉकेज"
+            ]
+        },
+        # 21. Coronary Artery Bypass Graft (CABG)
+        {
+            "code": "PROC-CARD-CABG-01",
+            "name": "Coronary Artery Bypass Graft (CABG / Open Heart Bypass)",
+            "specialty": "Cardiology",
+            "keywords": [
+                "bypass surgery", "cabg", "coronary bypass", "open heart surgery", "triple vessel disease",
+                "बायपास सर्जरी", "ओपन हार्ट सर्जरी", "बायपास"
+            ]
+        },
+        # 22. Pacemaker Implantation
+        {
+            "code": "PROC-CARD-PACE-01",
+            "name": "Permanent Cardiac Pacemaker Implantation (Dual Chamber)",
+            "specialty": "Cardiology",
+            "keywords": [
+                "pacemaker", "cardiac pacemaker", "slow heart rate", "heart block pacemaker",
+                "पेसमेकर", "पेसमेकर प्रत्यारोपण"
+            ]
+        },
+        # 23. Dengue Inpatient Management
+        {
+            "code": "PROC-MED-DENGUE-01",
+            "name": "Inpatient Dengue Management & Thrombocytopenia Care",
+            "specialty": "Internal Medicine & Infectious Diseases",
+            "keywords": [
+                "dengue", "dengue fever", "low platelets", "platelet count drop", "dengue hemorrhagic",
+                "डेंगू", "डेंगू बुखार", "प्लेटलेट्स कम", "प्लेटलेट"
+            ]
+        },
+        # 24. Typhoid / Enteric Fever Management
+        {
+            "code": "PROC-MED-TYPHOID-01",
+            "name": "Inpatient Enteric Fever (Typhoid) Treatment",
+            "specialty": "Internal Medicine & Infectious Diseases",
+            "keywords": [
+                "typhoid", "enteric fever", "widal positive", "typhoid fever",
+                "टाइफाइड", "मियादी बुखार", "मोतीझरा"
+            ]
+        },
+        # 25. Malaria Inpatient Care
+        {
+            "code": "PROC-MED-MALARIA-01",
+            "name": "Inpatient Acute Malaria Treatment & Care",
+            "specialty": "Internal Medicine & Infectious Diseases",
+            "keywords": [
+                "malaria", "falciparum", "vivax", "shivering fever",
+                "मलेरिया", "मलेरिया बुखार", "कंपकंपी के साथ बुखार"
+            ]
+        },
+        # 26. Viral Fever / Acute Infection Diagnostic Profile
+        {
+            "code": "PROC-MED-FEVER-01",
+            "name": "Acute Viral Fever & Infection Diagnostic Workup",
+            "specialty": "Internal Medicine & Infectious Diseases",
+            "keywords": [
+                "viral fever", "fever", "high temperature", "flu", "bodyache fever", "chills", "infection",
+                "बुखार", "वायरल बुखार", "तेज बुखार", "सर्दी बुखार", "बुखार और बदन दर्द"
+            ]
+        },
+        # 27. Severe Pneumonia Inpatient Care
+        {
+            "code": "PROC-MED-PNEUMO-01",
+            "name": "Inpatient Severe Pneumonia & Bronchitis Care",
+            "specialty": "Pulmonology",
+            "keywords": [
+                "pneumonia", "chest infection", "lung infection", "severe bronchitis", "phlegm cough",
+                "निमोनिया", "फेफड़ों में संक्रमण", "कफ और सांस फूलना"
+            ]
+        },
+        # 28. Tonsillectomy
+        {
+            "code": "PROC-ENT-TONS-01",
+            "name": "Tonsillectomy with Adenoidectomy",
+            "specialty": "ENT",
+            "keywords": [
+                "tonsils", "tonsillectomy", "tonsillitis", "throat infection recurring",
+                "टॉन्सिल", "टॉन्सिल का ऑपरेशन", "गले में टॉन्सिल"
+            ]
+        },
+        # 29. Septoplasty (DNS Repair)
+        {
+            "code": "PROC-ENT-SEPTO-01",
+            "name": "Septoplasty (Deviated Nasal Septum Repair)",
+            "specialty": "ENT",
+            "keywords": [
+                "septoplasty", "deviated septum", "dns", "crooked nose bone", "nasal blockage",
+                "नाक की हड्डी", "नाक की हड्डी का ऑपरेशन", "सेप्टोप्लास्टी"
+            ]
+        },
+        # 30. Acute Stroke ICU Stabilization
+        {
+            "code": "PROC-NEURO-STROKE-01",
+            "name": "Acute Ischemic Stroke / Paralysis ICU Stabilization",
+            "specialty": "Neurology",
+            "keywords": [
+                "stroke", "brain hemorrhage", "paralysis", "hemiplegia", "brain attack",
+                "लकवा", "स्ट्रोक", "ब्रेन स्ट्रोक", "पक्षाघात", "फालिज"
+            ]
+        },
+        # 31. MRI Scan
+        {
+            "code": "PROC-RAD-MRI-01",
+            "name": "Magnetic Resonance Imaging (MRI Scan - Brain/Spine/Joint)",
+            "specialty": "Radiology",
+            "keywords": [
+                "mri", "mri scan", "mri brain", "mri spine", "mri knee",
+                "एमआरआई", "एमआरआई स्कैन"
+            ]
+        },
+        # 32. CT Scan
+        {
+            "code": "PROC-RAD-CT-01",
+            "name": "Computed Tomography (CT Scan - Head/Chest/Abdomen)",
+            "specialty": "Radiology",
+            "keywords": [
+                "ct scan", "ncct head", "cect abdomen", "hrct chest",
+                "सीटी स्कैन", "सीटी स्कैन सिर"
+            ]
+        },
+        # 33. Whole Abdomen Ultrasound (USG)
+        {
+            "code": "PROC-RAD-USG-01",
+            "name": "Whole Abdomen & Pelvis Ultrasound (USG)",
+            "specialty": "Radiology",
+            "keywords": [
+                "ultrasound", "sonography", "usg abdomen", "usg",
+                "अल्ट्रासाउंड", "सोनोग्राफी", "पेट का अल्ट्रासाउंड"
+            ]
         }
     ]
 
@@ -147,17 +459,20 @@ class TriageService:
         if specialty_scores:
             identified_specialty = max(specialty_scores, key=specialty_scores.get)
 
-        # 4. Procedure Mapping
-        matched_proc = None
+        # 4. Procedure Mapping - Prioritize the most specific (longest keyword) match
+        matched_candidates = []
         for proc in self.PROCEDURE_PATTERNS:
             for kw in proc["keywords"]:
                 if kw.lower() in clean_text:
-                    matched_proc = proc
+                    matched_candidates.append((len(kw), proc))
                     break
-            if matched_proc:
-                break
         
-        if matched_proc and identified_specialty == "General Medicine":
+        matched_proc = None
+        if matched_candidates:
+            matched_candidates.sort(key=lambda x: x[0], reverse=True)
+            matched_proc = matched_candidates[0][1]
+        
+        if matched_proc:
             identified_specialty = matched_proc["specialty"]
 
         # Guidance text generation

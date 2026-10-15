@@ -7,15 +7,12 @@ import {
   AlertTriangle, 
   ShieldCheck, 
   ArrowRight, 
-  CheckCircle2, 
   Sparkles, 
   Info, 
-  HelpCircle,
   Building,
   MapPin,
   Languages,
   Activity,
-  Calculator,
   RefreshCw
 } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell } from 'recharts';
@@ -36,28 +33,40 @@ export default function TriagePage() {
   // Quick preset scenarios for hackathon judges & users
   const presets = [
     {
-      title: 'Orthopedic Knee Pain (Hindi)',
+      title: 'Orthopedic Knee Replacement (Hindi)',
       query: 'मेरे घुटने में बहुत तेज दर्द है और चलने में परेशानी हो रही है, डॉक्टर ने नी रिप्लेसमेंट की सलाह दी है',
       lang: 'hi' as const,
-      category: 'Orthopedics'
+      category: 'Orthopedics (~₹1.45L)'
     },
     {
-      title: 'Knee Osteoarthritis / TKR (English)',
-      query: 'Severe osteoarthritis in right knee joint with restricted mobility, physician recommended total knee replacement surgery',
-      lang: 'en' as const,
-      category: 'Orthopedics'
+      title: 'Dengue & Low Platelets (Hindi)',
+      query: 'तेज बुखार, बदन दर्द और प्लेटलेट्स 40,000 हो गए हैं, डॉक्टर ने डेंगू के लिए भर्ती होने को कहा है',
+      lang: 'hi' as const,
+      category: 'Inpatient Medicine (~₹22K)'
     },
     {
-      title: 'Gallbladder Stones (English)',
-      query: 'Persistent pain in upper right abdomen after eating fatty meals, ultrasound showed multiple gallstones (cholelithiasis)',
+      title: 'Cardiac Angioplasty & Stent (English)',
+      query: 'Severe angina on exertion, angiogram revealed 85% single vessel coronary artery blockage requiring angioplasty with drug-eluting stent',
       lang: 'en' as const,
-      category: 'General Surgery'
+      category: 'Cardiology (~₹1.55L)'
+    },
+    {
+      title: 'Kidney Stone Laser Removal (English)',
+      query: 'Excruciating right flank pain radiating to groin, CT KUB confirmed 8mm ureteric calculus requiring laser lithotripsy / PCNL',
+      lang: 'en' as const,
+      category: 'Urology (~₹48K)'
+    },
+    {
+      title: 'Cataract Eye Surgery (English)',
+      query: 'Cloudy blurred vision in both eyes with glare at night, diagnosed with senile cataract needing phacoemulsification with foldable IOL',
+      lang: 'en' as const,
+      category: 'Ophthalmology (~₹26K)'
     },
     {
       title: 'Emergency Red-Flag Test',
-      query: 'Crushing severe chest pain radiating to left arm with shortness of breath and sweating',
+      query: 'Crushing severe chest pain radiating to left arm with shortness of breath and cold sweating',
       lang: 'en' as const,
-      category: 'Emergency'
+      category: 'Emergency (Critical Alert)'
     }
   ];
 

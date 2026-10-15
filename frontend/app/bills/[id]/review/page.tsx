@@ -4,10 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
-  FileCheck, 
-  CheckCircle2, 
   AlertTriangle, 
-  Edit2, 
   Trash2, 
   Plus, 
   ArrowRight, 
@@ -15,7 +12,6 @@ import {
   Building, 
   Calendar, 
   Hash, 
-  Sparkles,
   RefreshCw
 } from 'lucide-react';
 import { api, BillExtractionReview, BillLineItem } from '@/lib/api';

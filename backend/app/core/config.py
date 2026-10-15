@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+from typing import Union
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -25,6 +27,16 @@ class Settings(BaseSettings):
         "http://localhost:8000",
         "http://127.0.0.1:8000"
     ]
+
+    @field_validator("ALLOWED_ORIGINS", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v: Union[str, list[str]]) -> list[str]:
+        if isinstance(v, str):
+            if v.strip() == "*":
+                return ["*"]
+            if not v.startswith("["):
+                return [i.strip() for i in v.split(",") if i.strip()]
+        return v
     
     # Database - Default to SQLite for zero-friction setup, PostgreSQL ready
     DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'medsure.db'}")

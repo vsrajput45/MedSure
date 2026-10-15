@@ -3,19 +3,15 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { 
-  LayoutDashboard, 
   Stethoscope, 
   FileSearch, 
   AlertTriangle, 
-  CheckCircle2, 
   ArrowRight, 
   Clock, 
   FileText, 
   ShieldCheck, 
-  TrendingUp, 
   RefreshCw,
   Sparkles,
-  ExternalLink,
   Scale,
   Activity
 } from 'lucide-react';

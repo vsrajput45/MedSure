@@ -1,17 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { 
   Database, 
   Search, 
-  Filter, 
-  ShieldCheck, 
-  Building, 
-  ExternalLink, 
-  Info,
-  RefreshCw,
-  Scale,
-  Sparkles
+  RefreshCw
 } from 'lucide-react';
 import { api, ReferenceRate } from '@/lib/api';
 
@@ -22,7 +15,7 @@ export default function ReferenceRatesPage() {
   const [specialty, setSpecialty] = useState('');
   const [scheme, setScheme] = useState('');
 
-  const fetchRates = async () => {
+  const fetchRates = useCallback(async () => {
     setLoading(true);
     try {
       const res = await api.getReferenceRates({
@@ -36,11 +29,11 @@ export default function ReferenceRatesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [search, specialty, scheme]);
 
   useEffect(() => {
     fetchRates();
-  }, [specialty, scheme]);
+  }, [fetchRates]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { 
-  FileText, 
   Download, 
   Copy, 
   Check, 
@@ -12,9 +11,7 @@ import {
   ArrowLeft, 
   ShieldCheck, 
   AlertTriangle,
-  RefreshCw,
-  Send,
-  Sparkles
+  RefreshCw
 } from 'lucide-react';
 import { api } from '@/lib/api';
 
@@ -23,8 +20,6 @@ export default function DisputeLetterPage() {
   const auditId = params.id as string;
 
   const [letterContent, setLetterContent] = useState<string>('');
-  const [hospital, setHospital] = useState<string>('');
-  const [invoiceNo, setInvoiceNo] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,8 +31,6 @@ export default function DisputeLetterPage() {
       try {
         const res = await api.getDisputeLetter(auditId);
         setLetterContent(res.dispute_letter);
-        setHospital(res.hospital_name || 'Hospital Billing Office');
-        setInvoiceNo(res.invoice_number || 'INV-REF');
       } catch (err: any) {
         setError(err.message || 'Failed to generate dispute letter draft.');
       } finally {

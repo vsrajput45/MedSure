@@ -1,4 +1,28 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/v1';
+const getBaseUrl = (): string => {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, '');
+  }
+  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+    return '/api/v1';
+  }
+  return 'http://127.0.0.1:8000/api/v1';
+};
+
+const API_BASE_URL = getBaseUrl();
+
+export interface BillRecord {
+  id: string;
+  file_name: string;
+  hospital_name?: string;
+  invoice_number?: string;
+  bill_date?: string;
+  patient_identifier?: string;
+  total_amount_claimed: number;
+  total_amount_calculated: number;
+  extraction_status: string;
+  is_demo_sample: boolean;
+  created_at: string;
+}
 
 export interface User {
   id: string;
@@ -298,7 +322,7 @@ export const api = {
     return res.json();
   },
 
-  async getBills(): Promise<any[]> {
+  async getBills(): Promise<BillRecord[]> {
     const res = await fetch(`${API_BASE_URL}/bills`, {
       headers: getAuthHeaders(),
     });

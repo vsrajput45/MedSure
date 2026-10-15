@@ -2,13 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { 
   UploadCloud, 
-  FileText, 
   AlertCircle, 
   Sparkles, 
-  ShieldCheck, 
   CheckCircle2, 
   ArrowRight,
   FileCheck,
@@ -57,7 +54,7 @@ export default function BillUploadPage() {
     setError(null);
     try {
       const bills = await api.getBills();
-      const demoBill = bills.find((b: any) => b.is_demo_sample) || bills[0];
+      const demoBill = bills.find((b) => b.is_demo_sample) || bills[0];
       if (demoBill) {
         router.push(`/bills/${demoBill.id}/review`);
       } else {

@@ -8,33 +8,14 @@ import {
   FileSearch, 
   ArrowRight, 
   Calculator, 
-  AlertTriangle, 
   FileCheck, 
-  BadgePercent, 
   CheckCircle2, 
   Sparkles,
-  Search,
   Scale,
-  Copy,
-  Layers,
   FileText,
-  Activity,
   HeartPulse,
   Clock,
-  Download,
-  HelpCircle,
-  TrendingDown,
-  ChevronRight,
-  ShieldAlert,
-  Building2,
-  Lock,
-  Check,
-  X,
-  ExternalLink,
-  Zap,
-  SlidersHorizontal,
-  ChevronDown,
-  Info
+  Download
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -42,7 +23,6 @@ export default function HomePage() {
   const [auditMode, setAuditMode] = useState<'audited' | 'raw'>('audited');
   
   // Interactive Procedure Estimator Teaser
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string>('Orthopedics');
   const [selectedProcedure, setSelectedProcedure] = useState<string>('TKR');
 
   const procedurePresets: Record<string, { name: string; min: string; median: string; max: string; code: string; scheme: string }> = {

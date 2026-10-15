@@ -22,11 +22,11 @@ from fastapi.exceptions import HTTPException, RequestValidationError
 
 logger = logging.getLogger("medsure")
 
-# CORS Configuration for local frontend and test runners
+# CORS Configuration for local frontend, preview, and deployed Vercel apps
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
-    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1|([a-zA-Z0-9-]+\.)*vercel\.app)(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

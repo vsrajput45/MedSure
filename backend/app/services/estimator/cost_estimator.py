@@ -75,18 +75,57 @@ class CostEstimatorService:
                 "exclusion_notes": ref_rate.exclusion_notes
             }
         else:
-            # Generic consultation range
-            min_cost = 600.0
-            max_cost = 1500.0
-            median_cost = 1000.0
-            benchmark_status = "NO_BENCHMARK_AVAILABLE"
-            proc_code = None
-            proc_name = "Specialist Clinical Consultation & Diagnostic Evaluation"
+            # Dynamic Clinical Specialty & Urgency Cost Range
             specialty = triage_result["identified_specialty"]
-            assumptions = (
-                "No verified procedural benchmark matched the given symptoms. "
-                "Calculated range represents standard specialist OPD consultation and initial baseline lab work."
-            )
+            is_emergency = triage_result["is_emergency"]
+            is_urgent = triage_result["urgency_level"] == "URGENT"
+
+            # Specialty baseline diagnostic and consultation benchmarks
+            specialty_baselines = {
+                "Cardiology": (3500.0, 5200.0, 7500.0, "Specialist Cardiology Consultation & Cardiac Workup (ECG, 2D-Echo, Troponin)"),
+                "Neurology": (4000.0, 6200.0, 9500.0, "Neurology Evaluation & Baseline Neuro-diagnostic Workup (NCV/EEG Screening)"),
+                "Urology & Nephrology": (2800.0, 4500.0, 6800.0, "Urology Consultation & Renal Profiling (KFT, USG KUB, Urine Analysis)"),
+                "Orthopedics": (2000.0, 3600.0, 5500.0, "Orthopedic Specialist Evaluation & Digital Joint Radiographs (X-Ray)"),
+                "Gastroenterology": (2400.0, 3900.0, 6000.0, "Gastroenterology Assessment & Abdominal Diagnostic Evaluation (LFT, USG)"),
+                "Obstetrics & Gynecology": (2200.0, 3800.0, 5800.0, "Obstetric & Gynecological Consultation & Pelvic Imaging"),
+                "Pulmonology": (2500.0, 4200.0, 6500.0, "Pulmonology Consultation & Pulmonary Function / Chest Diagnostic Profile"),
+                "Ophthalmology": (1200.0, 2200.0, 3500.0, "Comprehensive Ophthalmic Examination & Slit-lamp Fundus Refraction"),
+                "ENT": (1500.0, 2500.0, 4000.0, "ENT Diagnostic Consultation & Diagnostic Endoscopy / Audiometry"),
+                "Internal Medicine & Infectious Diseases": (1600.0, 2800.0, 4500.0, "Infectious Disease Profiling & Complete Fever Panel (CBC, Widal, Dengue/Malaria)"),
+                "General Surgery": (2500.0, 4000.0, 6000.0, "General Surgical Consultation & Pre-operative Ultrasound Assessment"),
+                "Emergency Medicine & Trauma": (8000.0, 14000.0, 22000.0, "Emergency Department Resuscitation & Multi-specialty Trauma Stabilization")
+            }
+
+            if is_emergency:
+                min_cost, median_cost, max_cost, proc_name = specialty_baselines["Emergency Medicine & Trauma"]
+                assumptions = (
+                    "Emergency red flags detected. Estimated range reflects immediate emergency room resuscitation, "
+                    "continuous cardiac/vital monitoring, urgent diagnostic imaging, and multi-specialty trauma stabilization."
+                )
+            elif specialty in specialty_baselines:
+                b_min, b_med, b_max, p_name = specialty_baselines[specialty]
+                mult = 1.6 if is_urgent else 1.0
+                min_cost = round(b_min * mult, 2)
+                median_cost = round(b_med * mult, 2)
+                max_cost = round(b_max * mult, 2)
+                proc_name = f"{'Urgent ' if is_urgent else ''}{p_name}"
+                assumptions = (
+                    f"Tailored clinical guidance range for {specialty}. "
+                    f"Reflects accredited specialist consultation, relevant diagnostic investigations, and "
+                    f"{'acute observation care' if is_urgent else 'initial symptomatic stabilization'}."
+                )
+            else:
+                mult = 1.5 if is_urgent else 1.0
+                min_cost = round(900.0 * mult, 2)
+                median_cost = round(1600.0 * mult, 2)
+                max_cost = round(2800.0 * mult, 2)
+                proc_name = f"{'Urgent ' if is_urgent else 'General '}Clinical Consultation & Diagnostic Baseline"
+                assumptions = (
+                    "Standard clinical outpatient evaluation with comprehensive physical examination and baseline hematology."
+                )
+
+            benchmark_status = "SPECIALTY_TIERED_ESTIMATE"
+            proc_code = None
             ref_data = None
 
         # Step 3: Record Estimate in Database

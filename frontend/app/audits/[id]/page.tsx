@@ -4,9 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { 
-  ShieldAlert, 
   AlertTriangle, 
-  CheckCircle2, 
   Download, 
   FileEdit, 
   Info, 
@@ -15,10 +13,7 @@ import {
   FileText, 
   Calculator, 
   Copy, 
-  Layers, 
-  ChevronRight,
-  Sparkles,
-  ArrowRight
+  Layers
 } from 'lucide-react';
 import { api, AuditRun, AuditFinding } from '@/lib/api';
 
