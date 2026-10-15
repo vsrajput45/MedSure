@@ -82,18 +82,19 @@ class CostEstimatorService:
 
             # Specialty baseline diagnostic and consultation benchmarks
             specialty_baselines = {
-                "Cardiology": (3500.0, 5200.0, 7500.0, "Specialist Cardiology Consultation & Cardiac Workup (ECG, 2D-Echo, Troponin)"),
-                "Neurology": (4000.0, 6200.0, 9500.0, "Neurology Evaluation & Baseline Neuro-diagnostic Workup (NCV/EEG Screening)"),
-                "Urology & Nephrology": (2800.0, 4500.0, 6800.0, "Urology Consultation & Renal Profiling (KFT, USG KUB, Urine Analysis)"),
-                "Orthopedics": (2000.0, 3600.0, 5500.0, "Orthopedic Specialist Evaluation & Digital Joint Radiographs (X-Ray)"),
-                "Gastroenterology": (2400.0, 3900.0, 6000.0, "Gastroenterology Assessment & Abdominal Diagnostic Evaluation (LFT, USG)"),
-                "Obstetrics & Gynecology": (2200.0, 3800.0, 5800.0, "Obstetric & Gynecological Consultation & Pelvic Imaging"),
-                "Pulmonology": (2500.0, 4200.0, 6500.0, "Pulmonology Consultation & Pulmonary Function / Chest Diagnostic Profile"),
-                "Ophthalmology": (1200.0, 2200.0, 3500.0, "Comprehensive Ophthalmic Examination & Slit-lamp Fundus Refraction"),
-                "ENT": (1500.0, 2500.0, 4000.0, "ENT Diagnostic Consultation & Diagnostic Endoscopy / Audiometry"),
-                "Internal Medicine & Infectious Diseases": (1600.0, 2800.0, 4500.0, "Infectious Disease Profiling & Complete Fever Panel (CBC, Widal, Dengue/Malaria)"),
-                "General Surgery": (2500.0, 4000.0, 6000.0, "General Surgical Consultation & Pre-operative Ultrasound Assessment"),
-                "Emergency Medicine & Trauma": (8000.0, 14000.0, 22000.0, "Emergency Department Resuscitation & Multi-specialty Trauma Stabilization")
+                "General Medicine": (300.0, 500.0, 850.0, "General Physician Outpatient (OPD) Consultation & Routine Care"),
+                "Cardiology": (1500.0, 2500.0, 4500.0, "Specialist Cardiology Consultation & Baseline Cardiac Profile (ECG, BP)"),
+                "Neurology": (1500.0, 2600.0, 4800.0, "Neurology Specialist Clinical Consultation & Evaluation"),
+                "Urology & Nephrology": (1200.0, 2200.0, 3800.0, "Urology Specialist Consultation & Routine Urine/Kidney Baseline"),
+                "Orthopedics": (1000.0, 1800.0, 3200.0, "Orthopedic Specialist Evaluation & Joint Physical Examination"),
+                "Gastroenterology": (1000.0, 1800.0, 3200.0, "Gastroenterology Specialist OPD Consultation & Clinical Assessment"),
+                "Obstetrics & Gynecology": (1000.0, 1800.0, 3000.0, "Obstetric & Gynecological Specialist Consultation"),
+                "Pulmonology": (1000.0, 1800.0, 3200.0, "Pulmonology Specialist Consultation & Clinical Chest Evaluation"),
+                "Ophthalmology": (600.0, 1200.0, 2000.0, "Comprehensive Ophthalmic Examination & Vision Refraction"),
+                "ENT": (600.0, 1200.0, 2200.0, "ENT Diagnostic Consultation & Otoscopic Examination"),
+                "Internal Medicine & Infectious Diseases": (800.0, 1400.0, 2400.0, "Infectious Disease Specialist Evaluation & Diagnostic Review"),
+                "General Surgery": (1000.0, 1800.0, 3000.0, "General Surgical OPD Consultation & Clinical Examination"),
+                "Emergency Medicine & Trauma": (5000.0, 9500.0, 18000.0, "Emergency Department Resuscitation & Multi-specialty Trauma Stabilization")
             }
 
             if is_emergency:
@@ -104,7 +105,7 @@ class CostEstimatorService:
                 )
             elif specialty in specialty_baselines:
                 b_min, b_med, b_max, p_name = specialty_baselines[specialty]
-                mult = 1.6 if is_urgent else 1.0
+                mult = 1.4 if is_urgent else 1.0
                 min_cost = round(b_min * mult, 2)
                 median_cost = round(b_med * mult, 2)
                 max_cost = round(b_max * mult, 2)
@@ -115,13 +116,13 @@ class CostEstimatorService:
                     f"{'acute observation care' if is_urgent else 'initial symptomatic stabilization'}."
                 )
             else:
-                mult = 1.5 if is_urgent else 1.0
-                min_cost = round(900.0 * mult, 2)
-                median_cost = round(1600.0 * mult, 2)
-                max_cost = round(2800.0 * mult, 2)
-                proc_name = f"{'Urgent ' if is_urgent else 'General '}Clinical Consultation & Diagnostic Baseline"
+                mult = 1.3 if is_urgent else 1.0
+                min_cost = round(250.0 * mult, 2)
+                median_cost = round(450.0 * mult, 2)
+                max_cost = round(800.0 * mult, 2)
+                proc_name = f"{'Urgent ' if is_urgent else 'General '}Physician Outpatient Consultation & Primary Care"
                 assumptions = (
-                    "Standard clinical outpatient evaluation with comprehensive physical examination and baseline hematology."
+                    "Standard outpatient clinic consultation with comprehensive physical examination and symptomatic prescription advice."
                 )
 
             benchmark_status = "SPECIALTY_TIERED_ESTIMATE"

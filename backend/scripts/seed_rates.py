@@ -854,6 +854,132 @@ def seed_database():
             inclusion_notes="Real-time ultrasound evaluation, printed thermal image plates & report.",
             exclusion_notes="Color Doppler vascular study.",
             is_synthetic=False
+        ),
+
+        # 40. Routine Viral Fever & Flu OPD Care
+        ReferenceRate(
+            procedure_code="PROC-OPD-FEVER-01",
+            procedure_name="Routine Viral Fever & Flu Outpatient Care (OPD)",
+            description="Primary care outpatient evaluation, clinical examination, antipyretic prescription & home hydration plan.",
+            specialty="General Medicine",
+            scheme="STANDARDIZED_BENCHMARK",
+            facility_category="NABH_ACCREDITED",
+            region="National",
+            unit_basis="Consultation",
+            base_rate=500.0,
+            min_rate=300.0,
+            max_rate=900.0,
+            effective_from=datetime(2025, 1, 1),
+            source_document="Primary Care Tariff Standards 2026",
+            verification_status="VERIFIED_OFFICIAL",
+            inclusion_notes="General physician consultation, temperature/vital check, paracetamol prescription, symptomatic advice.",
+            exclusion_notes="Hospital room admission, specialized viral antigen panels.",
+            is_synthetic=False
+        ),
+
+        # 41. Common Cold, Cough & Sore Throat OPD Care
+        ReferenceRate(
+            procedure_code="PROC-OPD-COUGH-01",
+            procedure_name="Common Cold, Cough & Sore Throat Outpatient Care (OPD)",
+            description="Primary care physician evaluation for acute upper respiratory infection, cough, and common cold.",
+            specialty="General Medicine",
+            scheme="STANDARDIZED_BENCHMARK",
+            facility_category="NABH_ACCREDITED",
+            region="National",
+            unit_basis="Consultation",
+            base_rate=450.0,
+            min_rate=250.0,
+            max_rate=850.0,
+            effective_from=datetime(2025, 1, 1),
+            source_document="Primary Care Tariff Standards 2026",
+            verification_status="VERIFIED_OFFICIAL",
+            inclusion_notes="General physician OPD visit, throat & chest auscultation, cough syrup and anti-allergy guidance.",
+            exclusion_notes="Chest X-ray, pulmonary function tests, throat swab culture.",
+            is_synthetic=False
+        ),
+
+        # 42. Tension Headache & Mild Migraine Outpatient Care
+        ReferenceRate(
+            procedure_code="PROC-OPD-HEADACHE-01",
+            procedure_name="Tension Headache & Mild Migraine Outpatient Consultation",
+            description="Clinical evaluation for tension-type headache, eye strain, or uncomplicated episodic migraine.",
+            specialty="General Medicine",
+            scheme="STANDARDIZED_BENCHMARK",
+            facility_category="NABH_ACCREDITED",
+            region="National",
+            unit_basis="Consultation",
+            base_rate=500.0,
+            min_rate=300.0,
+            max_rate=950.0,
+            effective_from=datetime(2025, 1, 1),
+            source_document="Primary Care Tariff Standards 2026",
+            verification_status="VERIFIED_OFFICIAL",
+            inclusion_notes="Clinical examination, blood pressure monitoring, trigger assessment, analgesic prescription.",
+            exclusion_notes="Brain CT/MRI imaging, EEG, super-specialist neurologist consultation.",
+            is_synthetic=False
+        ),
+
+        # 43. Acute Gastric Discomfort, Acidity & Diarrhea OPD Care
+        ReferenceRate(
+            procedure_code="PROC-OPD-GASTRO-01",
+            procedure_name="Acute Gastric Discomfort, Acidity & Mild Diarrhea Primary Care (OPD)",
+            description="Outpatient primary care management of uncomplicated indigestion, acidity, bloating, or acute gastroenteritis.",
+            specialty="General Medicine",
+            scheme="STANDARDIZED_BENCHMARK",
+            facility_category="NABH_ACCREDITED",
+            region="National",
+            unit_basis="Consultation",
+            base_rate=500.0,
+            min_rate=300.0,
+            max_rate=950.0,
+            effective_from=datetime(2025, 1, 1),
+            source_document="Primary Care Tariff Standards 2026",
+            verification_status="VERIFIED_OFFICIAL",
+            inclusion_notes="Physical abdominal examination, antacid / antiemetic / ORS hydration guidance, dietary counselling.",
+            exclusion_notes="Abdominal ultrasound, endoscopy, IV fluid administration in day-care/ICU.",
+            is_synthetic=False
+        ),
+
+        # 44. General Routine Physician OPD Consultation
+        ReferenceRate(
+            procedure_code="PROC-OPD-GEN-01",
+            procedure_name="General Physician OPD Consultation & Routine Primary Care",
+            description="Standard primary care consultation for routine malaise, body ache, fatigue, or general medical advice.",
+            specialty="General Medicine",
+            scheme="STANDARDIZED_BENCHMARK",
+            facility_category="NABH_ACCREDITED",
+            region="National",
+            unit_basis="Consultation",
+            base_rate=450.0,
+            min_rate=250.0,
+            max_rate=800.0,
+            effective_from=datetime(2025, 1, 1),
+            source_document="Primary Care Tariff Standards 2026",
+            verification_status="VERIFIED_OFFICIAL",
+            inclusion_notes="Comprehensive physical examination, vital checks (BP, SpO2, Pulse, Temp), clinical prescription.",
+            exclusion_notes="Specialist super-specialty referrals, pharmacy bills, diagnostic imaging.",
+            is_synthetic=False
+        ),
+
+        # 45. Complete Blood Count (CBC / Hemogram)
+        ReferenceRate(
+            procedure_code="PROC-DIAG-CBC-01",
+            procedure_name="Complete Blood Count (CBC / Hemogram)",
+            description="Standard automated 5-part differential blood count and hemoglobin screening.",
+            specialty="Pathology",
+            scheme="STANDARDIZED_BENCHMARK",
+            facility_category="NABH_ACCREDITED",
+            region="National",
+            unit_basis="Test",
+            base_rate=300.0,
+            min_rate=180.0,
+            max_rate=500.0,
+            effective_from=datetime(2025, 1, 1),
+            source_document="Diagnostic Tariff Survey 2025",
+            verification_status="VERIFIED_OFFICIAL",
+            inclusion_notes="Automated CBC test, platelet count, RBC indices, printed lab report.",
+            exclusion_notes="Home sample collection logistics fee.",
+            is_synthetic=False
         )
     ]
 
@@ -864,6 +990,18 @@ def seed_database():
         ).first()
         if not existing:
             db.add(rate)
+        else:
+            existing.procedure_name = rate.procedure_name
+            existing.description = rate.description
+            existing.specialty = rate.specialty
+            existing.unit_basis = rate.unit_basis
+            existing.base_rate = rate.base_rate
+            existing.min_rate = rate.min_rate
+            existing.max_rate = rate.max_rate
+            existing.source_document = rate.source_document
+            existing.verification_status = rate.verification_status
+            existing.inclusion_notes = rate.inclusion_notes
+            existing.exclusion_notes = rate.exclusion_notes
     
     db.commit()
     print(f"Successfully seeded {len(rates)} Reference Rates.")

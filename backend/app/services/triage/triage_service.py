@@ -22,6 +22,10 @@ class TriageService:
 
     # Clinical Specialty Knowledge Base
     SPECIALTY_PATTERNS = {
+        "General Medicine": [
+            r"\b(fever|cough|cold|headache|stomach ache|stomach pain|gas|acidity|indigestion|loose motion|diarrhea|vomiting|nausea|badan dard|kamzori|weakness|fatigue|sore throat|sneezing|flu|mild|malaise|runny nose|chills)\b",
+            r"(बुखार|खांसी|सर्दी|जुकाम|सिरदर्द|सिर दर्द|पेट दर्द|उल्टी|दस्त|कमजोरी|थकान|बदन दर्द|गैस|एसिडिटी|गले में खराश|गला खराब|छींक|हल्का बुखार)"
+        ],
         "Orthopedics": [
             r"\b(knee|joint|bone|hip|spine|fracture|ligament|acl|arthritis|osteoarthritis|cartilage|ortho|shoulder|dislocation|back pain)\b",
             r"(घुटने|जोड़|हड्डी|कमर दर्द|गठिया|हड्डी टूटना|फ्रैक्चर|कूल्हा|प्लास्टर)"
@@ -31,8 +35,8 @@ class TriageService:
             r"(दिल|धड़कन|दिल की धड़कन|कार्डियक|बायपास|हार्ट अटैक|स्टेंट)"
         ],
         "Gastroenterology": [
-            r"\b(abdomen|stomach|gastric|gallbladder|appendix|appendicitis|cholecystitis|hernia|jaundice|liver|bowel|colon|piles|fissure|fistula|acidity|ulcer)\b",
-            r"(पेट|पेट दर्द|अपेंडिक्स|पित्त की थैली|पीलिया|उल्टी|गैस|बवासीर|पाइल्स|हर्निया)"
+            r"\b(gallbladder|appendix|appendicitis|cholecystitis|hernia|jaundice|liver|bowel|colon|piles|fissure|fistula|ulcer|endoscopy|colonoscopy|severe abdominal pain)\b",
+            r"(अपेंडिक्स|पित्त की थैली|पीलिया|बवासीर|पाइल्स|हर्निया|गंभीर पेट दर्द|एंडोस्कोपी)"
         ],
         "Urology & Nephrology": [
             r"\b(kidney|renal|stone|lithotripsy|urinary|urine|prostate|turp|dialysis|creatinine|bladder)\b",
@@ -47,20 +51,20 @@ class TriageService:
             r"(गर्भावस्था|प्रसव|डिलीवरी|सिजेरियन|बच्चेदानी|मासिक धर्म)"
         ],
         "Pulmonology": [
-            r"\b(lung|cough|asthma|bronchitis|wheezing|respiratory|pneumonia|tuberculosis|tb|breath)\b",
-            r"(फेफड़े|खांसी|दमा|अस्थमा|कफ|निमोनिया|टीबी)"
+            r"\b(lung|asthma|bronchitis|wheezing|respiratory|pneumonia|tuberculosis|tb|breathless|copd|inhaler)\b",
+            r"(फेफड़े|दमा|अस्थमा|निमोनिया|टीबी|सांस फूलना)"
         ],
         "Neurology": [
-            r"\b(brain|neuro|nerve|headache|migraine|stroke|paralysis|seizure|epilepsy|vertigo)\b",
-            r"(दिमाग|सिरदर्द|माइग्रेन|लकवा|दौरा|चक्कर|मस्तिष्क)"
+            r"\b(brain|neuro|nerve|severe migraine|stroke|paralysis|seizure|epilepsy|vertigo|convulsion)\b",
+            r"(दिमाग|लकवा|दौरा|चक्कर|मस्तिष्क|पक्षाघात)"
         ],
         "ENT": [
-            r"\b(ear|nose|throat|tonsil|sinus|sinusitis|hearing|dns|septoplasty|ear pain)\b",
-            r"(कान|नाक|गला|टॉन्सिल|साइनस)"
+            r"\b(ear|nose|tonsil|sinus|sinusitis|hearing|dns|septoplasty|ear pain|ear discharge)\b",
+            r"(कान|नाक|टॉन्सिल|साइनस|कान बहना|कान में दर्द)"
         ],
         "Internal Medicine & Infectious Diseases": [
-            r"\b(fever|dengue|malaria|typhoid|infection|viral|platelet|chills|weakness|flu|covid)\b",
-            r"(बुखार|वायरल|डेंगू|मलेरिया|टाइफाइड|संक्रमण|कमजोरी)"
+            r"\b(dengue|malaria|typhoid|platelet|chikungunya|covid|sepsis|high fever with chills)\b",
+            r"(डेंगू|मलेरिया|टाइफाइड|प्लेटलेट|संक्रमण)"
         ],
         "General Surgery": [
             r"\b(surgery|wound|cyst|abscess|swelling|lump|incision|operation)\b",
@@ -325,14 +329,14 @@ class TriageService:
                 "मलेरिया", "मलेरिया बुखार", "कंपकंपी के साथ बुखार"
             ]
         },
-        # 26. Viral Fever / Acute Infection Diagnostic Profile
+        # 26. Persistent / Extended Febrile Infection Diagnostic Profile
         {
             "code": "PROC-MED-FEVER-01",
             "name": "Acute Viral Fever & Infection Diagnostic Workup",
             "specialty": "Internal Medicine & Infectious Diseases",
             "keywords": [
-                "viral fever", "fever", "high temperature", "flu", "bodyache fever", "chills", "infection",
-                "बुखार", "वायरल बुखार", "तेज बुखार", "सर्दी बुखार", "बुखार और बदन दर्द"
+                "persistent fever", "chronic fever", "fever panel", "unexplained fever", "fever workup",
+                "high fever persistent", "लगातार बुखार", "कई दिनों से बुखार", "बुखार की जांच", "फीवर प्रोफाइल"
             ]
         },
         # 27. Severe Pneumonia Inpatient Care
@@ -403,6 +407,69 @@ class TriageService:
             "keywords": [
                 "ultrasound", "sonography", "usg abdomen", "usg",
                 "अल्ट्रासाउंड", "सोनोग्राफी", "पेट का अल्ट्रासाउंड"
+            ]
+        },
+        # 34. Routine Viral Fever & Flu OPD Care
+        {
+            "code": "PROC-OPD-FEVER-01",
+            "name": "Routine Viral Fever & Flu Outpatient Care (OPD)",
+            "specialty": "General Medicine",
+            "keywords": [
+                "viral fever", "mild fever", "fever", "bukhar", "halka bukhar", "temperature", "bodyache fever", "flu",
+                "बुखार", "वायरल बुखार", "हल्का बुखार", "बुखार आ रहा है", "शरीर गरम है"
+            ]
+        },
+        # 35. Common Cold, Cough & Sore Throat OPD Care
+        {
+            "code": "PROC-OPD-COUGH-01",
+            "name": "Common Cold, Cough & Sore Throat Outpatient Care (OPD)",
+            "specialty": "General Medicine",
+            "keywords": [
+                "cough and cold", "dry cough", "wet cough", "cough", "cold", "khasi", "sardi", "zukam", "zukaam",
+                "sore throat", "runny nose", "sneezing", "throat irritation", "throat infection",
+                "खांसी", "जुकाम", "सर्दी", "कफ", "सूखी खांसी", "गले में दर्द", "गले में खराश", "छींक"
+            ]
+        },
+        # 36. Tension Headache & Mild Migraine OPD Care
+        {
+            "code": "PROC-OPD-HEADACHE-01",
+            "name": "Tension Headache & Mild Migraine Outpatient Consultation",
+            "specialty": "General Medicine",
+            "keywords": [
+                "mild headache", "tension headache", "headache", "sir dard", "sar dard", "sir me dard", "sar me dard", "head pain",
+                "सिरदर्द", "सिर दर्द", "सर दर्द", "सिर में दर्द"
+            ]
+        },
+        # 37. Acute Gastric Discomfort, Acidity & Diarrhea OPD Care
+        {
+            "code": "PROC-OPD-GASTRO-01",
+            "name": "Acute Gastric Discomfort, Acidity & Mild Diarrhea Primary Care (OPD)",
+            "specialty": "General Medicine",
+            "keywords": [
+                "mild stomach pain", "stomach pain", "stomach ache", "pet dard", "pet me dard", "acidity", "gas",
+                "indigestion", "heartburn", "loose motion", "diarrhea", "vomiting", "nausea", "dast", "ulti", "pet kharab",
+                "पेट दर्द", "पेट में दर्द", "गैस", "एसिडिटी", "उल्टी", "दस्त", "अपच", "जी मिचलाना"
+            ]
+        },
+        # 38. General Routine Physician OPD Consultation
+        {
+            "code": "PROC-OPD-GEN-01",
+            "name": "General Physician OPD Consultation & Routine Primary Care",
+            "specialty": "General Medicine",
+            "keywords": [
+                "body ache", "badan dard", "kamzori", "weakness", "fatigue", "thakan", "tiredness", "malaise",
+                "doctor consultation", "general checkup", "opd consultation", "doctor consult",
+                "बदन दर्द", "कमजोरी", "थकान", "डॉक्टर परामर्श", "सामान्य जांच"
+            ]
+        },
+        # 39. Complete Blood Count (CBC / Hemogram)
+        {
+            "code": "PROC-DIAG-CBC-01",
+            "name": "Complete Blood Count (CBC / Hemogram)",
+            "specialty": "Pathology",
+            "keywords": [
+                "cbc", "complete blood count", "hemogram", "blood test cbc",
+                "सीबीसी", "खून की जांच सीबीसी"
             ]
         }
     ]
