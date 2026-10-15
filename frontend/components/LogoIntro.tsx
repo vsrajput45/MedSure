@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Shield, Sparkles, Activity, CheckCircle2 } from 'lucide-react';
 
 interface LogoIntroProps {
@@ -8,62 +8,95 @@ interface LogoIntroProps {
   durationMs?: number;
 }
 
-export default function LogoIntro({ durationMs = 1800 }: LogoIntroProps) {
+export default function LogoIntro({ durationMs = 900 }: LogoIntroProps) {
   const [mounted, setMounted] = useState(false);
   const [exiting, setExiting] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  const handleDismiss = useCallback(() => {
+    setExiting(true);
+    try {
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('medsure_intro_dismissed', 'true');
+        localStorage.setItem('medsure_intro_seen', 'true');
+      }
+    } catch {}
+    setTimeout(() => {
+      setMounted(false);
+    }, 150);
+  }, []);
+
   useEffect(() => {
-    // Only show once per session
-    if (typeof window !== 'undefined' && sessionStorage.getItem('medsure_intro_seen')) {
+    // Check if already seen or dismissed
+    try {
+      if (
+        typeof window !== 'undefined' &&
+        (sessionStorage.getItem('medsure_intro_dismissed') === 'true' ||
+          localStorage.getItem('medsure_intro_seen') === 'true')
+      ) {
+        return;
+      }
+    } catch {
       return;
     }
-    setMounted(true);
-    sessionStorage.setItem('medsure_intro_seen', 'true');
 
-    // Progress animation
+    setMounted(true);
+
+    // Fast progress ticker
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(progressInterval);
           return 100;
         }
-        return prev + 12;
+        return prev + 25;
       });
-    }, 100);
+    }, 70);
 
-    // Trigger exit transition
+    // Guaranteed auto-exit transition
     const exitTimer = setTimeout(() => {
       setExiting(true);
+      try {
+        sessionStorage.setItem('medsure_intro_dismissed', 'true');
+        localStorage.setItem('medsure_intro_seen', 'true');
+      } catch {}
     }, durationMs);
 
-    // Unmount after exit transition completes
+    // Guaranteed unmount after exit
     const unmountTimer = setTimeout(() => {
       setMounted(false);
-    }, durationMs + 500);
+    }, durationMs + 350);
+
+    // Hard fallback safety unmount: NEVER allow intro to stay past 1.6 seconds
+    const hardFallbackTimer = setTimeout(() => {
+      setExiting(true);
+      setMounted(false);
+    }, 1600);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+        handleDismiss();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       clearInterval(progressInterval);
       clearTimeout(exitTimer);
       clearTimeout(unmountTimer);
+      clearTimeout(hardFallbackTimer);
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [durationMs]);
+  }, [durationMs, handleDismiss]);
 
   if (!mounted) return null;
-
-  const handleSkip = () => {
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('medsure_intro_seen', 'true');
-    }
-    setExiting(true);
-    setTimeout(() => setMounted(false), 300);
-  };
 
   return (
     <div
       role="dialog"
       aria-label="MedSure Initializing Intro"
-      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-950 text-white overflow-hidden transition-all duration-500 ease-out select-none ${
+      onClick={handleDismiss}
+      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-950/95 backdrop-blur-md text-white overflow-hidden transition-all duration-300 ease-out select-none cursor-pointer ${
         exiting ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
       }`}
     >
@@ -74,14 +107,18 @@ export default function LogoIntro({ durationMs = 1800 }: LogoIntroProps) {
 
       {/* Skip button in top corner */}
       <button
-        onClick={handleSkip}
-        className="absolute top-6 right-6 px-3.5 py-1.5 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-xs text-slate-400 hover:text-slate-200 transition-all cursor-pointer backdrop-blur-md"
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleDismiss();
+        }}
+        className="absolute top-6 right-6 px-4 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-xs text-slate-300 hover:text-white transition-all cursor-pointer backdrop-blur-md shadow-lg"
       >
-        Skip Intro ✕
+        Skip to Website ➔
       </button>
 
       {/* Centerpiece Emblem & Branding */}
-      <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-md w-full">
+      <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
         {/* Animated Shield Emblem */}
         <div className="relative mb-6">
           {/* Sonic Radar Rings */}
@@ -124,7 +161,7 @@ export default function LogoIntro({ durationMs = 1800 }: LogoIntroProps) {
         </p>
 
         {/* High-tech Loading & Verification Ticker */}
-        <div className="w-full max-w-xs space-y-2">
+        <div className="w-full max-w-xs space-y-3">
           <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden p-0.5">
             <div
               className="h-full bg-gradient-to-r from-teal-400 via-teal-500 to-emerald-400 rounded-full transition-all duration-150 ease-out shadow-[0_0_10px_rgba(20,184,166,0.8)]"
@@ -135,12 +172,21 @@ export default function LogoIntro({ durationMs = 1800 }: LogoIntroProps) {
           <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
             <span className="flex items-center gap-1 text-teal-400">
               <Activity className="w-3 h-3 animate-spin" />
-              <span>Verifying Deterministic Engine...</span>
+              <span>Initializing Verified Engine...</span>
             </span>
             <span className="tabular-nums font-bold text-slate-300">{Math.min(progress, 100)}%</span>
           </div>
 
-          <div className="flex items-center justify-center gap-2 pt-2 text-[10px] text-slate-400 border-t border-slate-800/80">
+          <button
+            type="button"
+            onClick={handleDismiss}
+            className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-slate-950 font-bold text-xs shadow-lg shadow-teal-500/25 transition-all cursor-pointer flex items-center justify-center gap-1.5 mt-2"
+          >
+            <span>Enter Platform Now</span>
+            <span>➔</span>
+          </button>
+
+          <div className="flex items-center justify-center gap-2 pt-1 text-[10px] text-slate-400">
             <CheckCircle2 className="w-3 h-3 text-emerald-400" />
             <span>Zero Rate Hallucinations • Decimal Exact</span>
           </div>
